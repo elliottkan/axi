@@ -667,7 +667,7 @@ community:
     domain: Project management
     description: "Create, search, update, and comment on Asana tasks, projects, and portfolios through Asana's official V2 MCP server as a scriptable headless CLI, with OAuth login, TOON output, and structured errors."
     admission:
-      status: admitted
+      status: exception
       reviewed_revision: 3d1c41eb8343fb153138e1eac58771a6c4f8ac20
       reviewed_components:
         - bin/asana-axi.ts

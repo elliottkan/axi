@@ -661,6 +661,39 @@ community:
         - "src/usage.ts raises AxiError with code VALIDATION_ERROR for usage mistakes, which the SDK maps to exit 2, while other AxiError codes exit 1; src/flags.ts rejects unknown flags and missing values, and the help text documents the 0/1/2 exit taxonomy."
         - "docs, learn, and validate wrap the Shopify Dev MCP server over local stdio in src/mcp.ts with only the optional SHOPIFY_DEV_MCP_CMD and SHOPIFY_AXI_MODEL environment overrides; no API tokens or secrets appear on the CLI surface. Truncated output is recoverable with --full and empty docs results are an explicit count: 0."
         - "No paid or mutating store writes exist; failing validations set process.exitCode = 1 with structured output, setup hooks is explicit opt-in via installSessionStartHooks, and an MIT LICENSE is present."
+  - name: asana-axi
+    url: https://github.com/elliottkan/asana-axi
+    author: elliottkan
+    domain: Project management
+    description: "Create, search, update, and comment on Asana tasks, projects, and portfolios through Asana's official V2 MCP server as a scriptable headless CLI, with OAuth login, TOON output, and structured errors."
+    admission:
+      status: exception
+      reviewed_revision: 3d1c41eb8343fb153138e1eac58771a6c4f8ac20
+      reviewed_components:
+        - bin/asana-axi.ts
+        - src/cli.ts
+        - src/errors.ts
+        - src/flags.ts
+        - src/config.ts
+        - src/context.ts
+        - src/suggestions.ts
+        - src/format/toon.ts
+        - src/mcp/client.ts
+        - src/auth/login.ts
+        - src/auth/store.ts
+        - src/auth/provider.ts
+        - src/commands/tasks.ts
+        - src/commands/setup.ts
+        - src/commands/helpers.ts
+        - package.json
+        - LICENSE
+      source_observations:
+        - "src/cli.ts registers me/tasks/projects/portfolios/users/teams/agents/attachments/search/status/login/logout/auth/setup through runAxiCli with a content-first `home` view (src/context.ts) and per-command usage text; unknown top-level commands and malformed args raise VALIDATION_ERROR via src/errors.ts usageError, which the SDK maps to exit 2, while MCP/auth failures map to exit 1."
+        - "src/mcp/client.ts and src/auth/provider.ts wrap Asana's real V2 MCP server (config.ts MCP_URL https://mcp.asana.com/v2/mcp) over StreamableHTTPClientTransport with OAuth; there is no dynamic client registration, so login requires a pre-registered app id/secret (env or --client-id/--client-secret) and src/auth/store.ts persists only the resulting OAuth tokens to ~/.config/asana-axi/credentials.json with mode 0o600."
+        - "src/commands/tasks.ts exposes create/update/delete/comment as real mutating MCP calls (create_tasks, update_tasks, delete_task, add_comment) with no dry-run or confirmation gate; delete requires only a bare gid. src/flags.ts is a strict parser that rejects unknown flags and empty values with VALIDATION_ERROR, and list commands report an explicit `0 tasks found` plus contextual suggestions (src/suggestions.ts) instead of a silent empty output."
+        - "src/format/toon.ts renders lists/details/errors through @toon-format/toon with no field-length truncation or --full escape hatch (no observed AXI principle-3 truncation logic, unlike design-system-axi/frontier-axi); output is otherwise structured (error+code+suggestions) and consistent across commands."
+        - "package.json declares dependencies @modelcontextprotocol/sdk, @toon-format/toon, axi-sdk-js, open with no unexpected network or shell-exec surface beyond the Asana MCP endpoint and the OAuth browser-open flow; an MIT LICENSE is present and matches the catalog author."
+      exception: "src/commands/tasks.ts delete/update/create send real mutating Asana API calls (via MCP) with no confirmation prompt or --dry-run; a scripted or hallucinated `asana-axi tasks delete <gid>` executes immediately. src/format/toon.ts has no truncation or --full hint for long fields (AXI principle 3), unlike sibling catalog entries."
   - name: clockify-axi
     url: https://github.com/elliottkan/clockify-axi
     author: elliottkan

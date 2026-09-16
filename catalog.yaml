@@ -661,3 +661,8 @@ community:
         - "src/usage.ts raises AxiError with code VALIDATION_ERROR for usage mistakes, which the SDK maps to exit 2, while other AxiError codes exit 1; src/flags.ts rejects unknown flags and missing values, and the help text documents the 0/1/2 exit taxonomy."
         - "docs, learn, and validate wrap the Shopify Dev MCP server over local stdio in src/mcp.ts with only the optional SHOPIFY_DEV_MCP_CMD and SHOPIFY_AXI_MODEL environment overrides; no API tokens or secrets appear on the CLI surface. Truncated output is recoverable with --full and empty docs results are an explicit count: 0."
         - "No paid or mutating store writes exist; failing validations set process.exitCode = 1 with structured output, setup hooks is explicit opt-in via installSessionStartHooks, and an MIT LICENSE is present."
+  - name: asana-axi
+    url: https://github.com/elliottkan/asana-axi
+    author: elliottkan
+    domain: Project management
+    description: "Create, search, update, and comment on Asana tasks, projects, and portfolios through Asana's official V2 MCP server as a scriptable headless CLI, with OAuth login, TOON output, and structured errors."

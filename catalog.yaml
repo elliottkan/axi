@@ -666,3 +666,33 @@ community:
     author: elliottkan
     domain: Time tracking
     description: "Wraps Clockify's full REST API (not just its 13-tool MCP server) with a cached workspace/user identity, TOON output, and AXI exit codes for timers, time entries, projects, tasks, clients, tags, and reports."
+    admission:
+      status: admitted
+      reviewed_revision: 333499465556b555c4886b1a96623ccc61c004d1
+      reviewed_components:
+        - bin/clockify-axi.ts
+        - src/cli.ts
+        - src/flags.ts
+        - src/usage.ts
+        - src/version.ts
+        - src/identity.ts
+        - src/rest.ts
+        - src/reports.ts
+        - src/help.ts
+        - src/commands/whoami.ts
+        - src/commands/timer.ts
+        - src/commands/log.ts
+        - src/commands/report.ts
+        - src/commands/clients.ts
+        - src/commands/projects.ts
+        - src/commands/tasks.ts
+        - src/commands/tags.ts
+        - src/clockify-axi.test.ts
+        - package.json
+        - LICENSE
+      source_observations:
+        - "bin/clockify-axi.ts answers bare -v/-V/--version through axi-sdk-js/fast-path before dynamically importing src/cli.js; src/cli.ts registers whoami, timer, log, report, clients, projects, tasks, tags, and setup hooks through runAxiCli with a content-first home view that shows cached identity or a clear next step when none exists yet. TOON output and the exit-code taxonomy come from axi-sdk-js's runAxiCli, not a package-local dependency - package.json's only runtime dependency is axi-sdk-js."
+        - "src/usage.ts raises AxiError with code VALIDATION_ERROR for bad flags/subcommands (SDK maps this to exit 2); src/flags.ts parseFlags is a strict parser that rejects unknown flags and value flags with nothing after them, both via usageError. src/identity.ts getIdentity() caches userId/workspaceId/timeZone/weekStart from GET /user (plus GET /workspaces) under ~/.cache/clockify-axi/identity.json (or $XDG_CACHE_HOME), and every other command depends on this cached identity to avoid re-resolving workspace/user IDs on each call."
+        - "src/rest.ts is the only network path: it reads CLOCKIFY_API_KEY from the environment (never accepted as a CLI flag, so it can't leak into shell history/process args), sends it as the x-api-key header, and raises AxiError with a distinct code for missing_api_key, api_unavailable, auth_failed (401/403), and generic api_error. No secrets appear in command output."
+        - "src/commands/timer.ts, log.ts, report.ts, clients.ts, projects.ts, tasks.ts, and tags.ts each wrap one or a few Clockify REST/Reports API endpoints with thin flag parsing (project/task/tag IDs, ISO date/time, --range for reports) and return plain JSON objects for the SDK to encode; src/reports.ts computeDateRange resolves the named ranges (THIS_WEEK, LAST_MONTH, CUSTOM, etc.) using the cached weekStart so week boundaries match the user's real Clockify settings rather than assuming Monday."
+        - "No mutating call is destructive beyond what Clockify's own API already allows an authenticated key to do (start/stop/log/patch time entries); there is no delete-workspace or bulk-destroy surface. An MIT LICENSE is present, and src/clockify-axi.test.ts exercises flag parsing and command routing."

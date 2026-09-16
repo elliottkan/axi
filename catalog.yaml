@@ -637,3 +637,27 @@ community:
     author: elliottkan
     domain: Shopify
     description: "Search shopify.dev and validate generated GraphQL, Liquid themes, and Polaris components against the real schemas - wraps Shopify's Dev MCP server and exits non-zero on hallucinated fields."
+    admission:
+      status: admitted
+      reviewed_revision: cf30cacd850d742857210826102c150cad8fb2ce
+      reviewed_components:
+        - bin/shopify-axi.ts
+        - src/cli.ts
+        - src/flags.ts
+        - src/usage.ts
+        - src/version.ts
+        - src/mcp.ts
+        - src/session.ts
+        - src/apis.ts
+        - src/help.ts
+        - src/commands/docs.ts
+        - src/commands/learn.ts
+        - src/commands/validate.ts
+        - src/shopify-axi.test.ts
+        - package.json
+        - LICENSE
+      source_observations:
+        - "bin/shopify-axi.ts uses axi-sdk-js/fast-path tryFastPath for bare -v/-V/--version and prints the bare version; src/cli.ts routes through runAxiCli with a content-first home view and the apis, learn, docs, validate, and setup hooks subcommands."
+        - "src/usage.ts raises AxiError with code VALIDATION_ERROR for usage mistakes, which the SDK maps to exit 2, while other AxiError codes exit 1; src/flags.ts rejects unknown flags and missing values, and the help text documents the 0/1/2 exit taxonomy."
+        - "docs, learn, and validate wrap the Shopify Dev MCP server over local stdio in src/mcp.ts with only the optional SHOPIFY_DEV_MCP_CMD and SHOPIFY_AXI_MODEL environment overrides; no API tokens or secrets appear on the CLI surface. Truncated output is recoverable with --full and empty docs results are an explicit count: 0."
+        - "No paid or mutating store writes exist; failing validations set process.exitCode = 1 with structured output, setup hooks is explicit opt-in via installSessionStartHooks, and an MIT LICENSE is present."

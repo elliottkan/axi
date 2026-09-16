@@ -29,6 +29,12 @@ docs/social/rendered/
 # Playwright MCP session artifacts
 .playwright-mcp/
 
+# graft local pipeline cache
+graft/.cache/
+
 # npm lock file (this project uses pnpm)
 package-lock.json
 .no-mistakes/evidence/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
